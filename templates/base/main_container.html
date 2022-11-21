@@ -1,11 +1,11 @@
 {% from 'base/detection_tab.html'    import detection_tab as base_detection_tab %}
 {% from 'base/training_tab.html'     import training_tab as base_training_tab %}
-
+{% from 'roots/detection_tab.html'   import information_detection as roots_info_detection %}
 
 {% macro base_tabs() %}
 <div class="ui pointing secondary tabs menu">
-    <a class="active item" data-tab="detection">Detection</a>
-    <a class="item"        data-tab="training"> Training </a>
+    <a class="active item" data-tab="detection2">Detection</a>
+    <a class="item"        data-tab="training2"> Training </a>
 </div>
 {% endmacro %}
 
@@ -13,17 +13,40 @@
 {% macro main_container(
     app,
     tabs          = base_tabs(),
-    detection_tab = base_detection_tab(app),
+    analysis_tab  = base_detection_tab(app),
     training_tab  = base_training_tab(app),
     extra         = ""
 ) %}
+<style>
+body{
+background-color:#e6ffcc;
+}
+
+.parallax {
+  /* The image used */
+  background-image: url("brown-dirt-background.jpg");
+
+  /* Set a specific height */
+  min-height: 50px;
+  width: 98%;
+  margin-left: 1%;
+
+  /* Create the parallax scrolling effect */
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+</style>
 <div class="ui hidden section divider"></div> <!--whitespace-->
+
 <div class="ui container page-wide" id="main-container">
 
     {{ tabs | indent }}
 
-    <div class="ui active tab segment unselectable" data-tab="detection" style="padding:0">
-        {{ detection_tab    | indent(8) }}
+    <!--changed the data-tab to analysis here otherwise detection was always "active" and could not be chosen-->
+    <div class="ui active tab segment unselectable" data-tab="analysis" style="padding:0">
+        {{ analysis_tab    | indent(8) }}
     </div>
 
     <div class="ui bottom attached tab" data-tab="training">
@@ -35,4 +58,43 @@
 </div>
 {% endmacro %}
 
+{% macro sub_main_container(
+    app,
+    tabs          = base_tabs(),
+    detection_tab = base_detection_tab(app),
+    extra         = ""
+) %}
+<div class="ui hidden section divider"></div> <!--whitespace-->
+<div class="ui container page-wide" id="sub_main-container">
 
+    <div class="ui message">
+        <p>Information about how the analysis tab works!</p>
+    </div>
+
+    <div class="ui hidden section divider"></div>
+    <label for="input_images" class="ui basic icon button" >
+        <i class="images outline icon"></i>
+        Load Input Images For Analysis
+    </label>
+    <input type="file" id="input_images" style="display:none"
+            onchange="{{ app }}.FileInput.on_inputfiles_select(event)" accept="image/*" multiple>
+
+    <label for="input_folder" class="ui basic icon button">
+        <i class="folder outline icon"></i>
+            Load Input Folder For Analysis
+    </label>
+    <input type="file" id="input_folder" style="display:none"
+            onchange="{{ app }}.FileInput.on_inputfolder_select(event)"  webkitdirectory directory multiple>
+    {{ tabs | indent }}
+
+    <div class="ui active tab segment unselectable" data-tab="detection" style="padding:0">
+        <div class="ui message">
+            Information about the detection tab!
+        </div>
+        {{ detection_tab    | indent(8) }}
+    </div>
+
+    {{ extra | indent }}
+
+</div>
+{% endmacro %}
